@@ -27,3 +27,4 @@
  */
 
 $string['filtername'] = 'Insert question';
+$string['link_text'] = 'Click for question';

@@ -26,13 +26,17 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->libdir.'/outputlib.php');
-
 class filter_question_renderer extends plugin_renderer_base {
-
   public function get_question($number) {
-    $text = "You want question: " . $number . '<br />';
-    $text = html_writer::tag('span', $text);
+    global $CFG;
+    // What's the most sensible thing to do here?
+    // I'm thinking return a popup link to preview.php
+    // Todo: add a parameter which is the link text for the question
+    $url = '/question/preview.php'; 
+    $link = new moodle_url($url, array('id'=>$number));
+    $text = $this->output->action_link($link, get_string('link_text', 'filter_question'), new popup_action('click', $link)); 
+    // $text = "You want question: " . $number . '<br />';
+    //$text = html_writer::link($popup);
     return $text;
   }
 }
