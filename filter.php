@@ -22,6 +22,8 @@
  * @subpackage question
  * @copyright  2017 Richard Jones (https://richardnz.net)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * 
+ * Based on work by nadavkav ET netvision DooT net DooT il
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -35,6 +37,10 @@ class filter_question extends moodle_text_filter {
 
   function filter($text, array $options = array()) {
   global $PAGE;
+  // Might need to change these at some point - eg to double curlies
+  $START_TAG = '{QUESTION:';
+  $END_TAG = '}';
+
   $renderer = $PAGE->get_renderer('filter_question');
 
     // Basic tests to avoid work
@@ -46,21 +52,11 @@ class filter_question extends moodle_text_filter {
       // Do a quick check to see if we have curlies
       return $text;
     }
+
     // There may be a question or questions in here somewhere so continue ...
-    // Get the question numbers and positions in the text
-    $text = filter_question_insert_questions($text, '{QUESTION:', '}', $renderer);
-    
-/*
-    //var_dump($matches);
-    foreach ($matches as $match) {
-      var_dump($match);
-      echo '<br />';
-      foreach($match as $m=>$value) {
-        echo "data: $m=>$value <br />";
-      }
-    }
-    //$text = filter_question_insert_question($data, $text);
-*/
+    // Get the question numbers and positions in the text and call the
+    // renderer to deal with them
+    $text = filter_question_insert_questions($text, $START_TAG, $END_TAG, $renderer);   
 
     return $text;
   }
@@ -80,7 +76,8 @@ function filter_question_insert_questions($str, $needle, $limit, $renderer) {
     if ($initpos !== false) {
        $pos = $initpos + strlen($needle);  //get up to number
        $endpos = strpos($newstring, $limit);
-       $number = substr($newstring, $pos, $endpos - $pos);
+       $number = substr($newstring, $pos, $endpos - $pos); // extract question number
+       // Todo: add some sanity checks here, trim the string etc
        $question = $renderer->get_question($number); 
        $newstring = substr_replace($newstring, $question, $initpos, $endpos - $initpos + 1);
        $initpos = $endpos + 1;
