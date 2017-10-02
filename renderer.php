@@ -39,17 +39,16 @@ class filter_question_renderer extends plugin_renderer_base {
     // I'm thinking return a popup link to preview.php
     // Todo: add a parameter which is the link text for the question
     // Todo: look at this: https://moodle.org/mod/forum/discuss.php?d=332254
-    $url = '/question/preview.php'; 
 
     // I obfuscated the number in the Atto button code, so I need to de-obfuscate here
     // Todo:  Make a set of config params.  If I knew how I could SHA1 hash the question
     //        number into the Moodle database via the Yui button function
     // echo 'obfusc: ' . $number;
-    $number = intdiv($number-199, 7);
-    echo 'number: ' + $number;
+    // Pass the obfuscated id to a copy of preview.php
+    $url = '/filter/question/preview.php'; 
 
     // Now the question number will be visible within the link, how to get around that?
-    // This will apply whether or not I hash the question number
+    // This will apply whether or not I hash the question nuber
     $link = new moodle_url($url, array('id'=>$number));
     $text = $this->output->action_link($link, get_string('link_text', 'filter_question'), new popup_action('click', $link)); 
     return $text;
