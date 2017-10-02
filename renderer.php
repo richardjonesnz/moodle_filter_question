@@ -47,6 +47,9 @@ class filter_question_renderer extends plugin_renderer_base {
     // echo 'obfusc: ' . $number;
     $number = intdiv($number-199, 7);
     echo 'number: ' + $number;
+
+    // Now the question number will be visible within the link, how to get around that?
+    // This will apply whether or not I hash the question number
     $link = new moodle_url($url, array('id'=>$number));
     $text = $this->output->action_link($link, get_string('link_text', 'filter_question'), new popup_action('click', $link)); 
     return $text;
