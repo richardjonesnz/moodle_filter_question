@@ -16,7 +16,6 @@ Rename to question.
 Atto button
 place moodle_atto_question files into Moodle lib/editor/atto/plugin folder.  
 Rename to question.
-Ignore the configuration file for now, perhaps change the default text to 'place your question number here' or some such.
 
 Use the Atto editor config to include your button on the Atto toolbar. 
 This is in Site admin | plugind | Text editors | Atto toolbar settings.

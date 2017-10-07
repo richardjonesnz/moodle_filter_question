@@ -33,7 +33,7 @@ class filter_question_renderer extends plugin_renderer_base {
   * Given a question id, show the preview.php page
   *
   */
-  public function get_question($number) {
+  public function get_question($number, $linktext) {
     global $CFG;
     // What's the most sensible thing to do here?
     // I'm thinking return a popup link to preview.php
@@ -50,7 +50,12 @@ class filter_question_renderer extends plugin_renderer_base {
     // Now the question number will be visible within the link, how to get around that?
     // This will apply whether or not I hash the question nuber
     $link = new moodle_url($url, array('id'=>$number));
-    $text = $this->output->action_link($link, get_string('link_text', 'filter_question'), new popup_action('click', $link)); 
+    
+    // Check for link text
+    if ($linktext === '') { $linktext = get_string('link_text', 'filter_question'); }
+    
+    // Todo: Add an option in config to have the link inline or as a popup
+    $text = $this->output->action_link($link, $linktext, new popup_action('click', $link)); 
     return $text;
   }
 }

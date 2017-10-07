@@ -74,11 +74,24 @@ function filter_question_insert_questions($str, $needle, $limit, $renderer) {
   While (strpos($newstring, $needle) !== false) {
     $initpos = strpos($newstring, $needle);
     if ($initpos !== false) {
-       $pos = $initpos + strlen($needle);  //get up to number
+       $pos = $initpos + strlen($needle);  //get up to string
        $endpos = strpos($newstring, $limit);
-       $number = substr($newstring, $pos, $endpos - $pos); // extract question number
+       $data = substr($newstring, $pos, $endpos - $pos); // extract question data
        // Todo: add some sanity checks here, trim the string etc
-       $question = $renderer->get_question($number); 
+       // The filter text is added by atto button question which does at least
+       // parse the number part, so should be OK unless edited by user.
+       // echo 'Data: ' . $data;
+       // get the link text
+       $endlinkpos = strpos($data, '|');
+       $linktext = substr($data, 0, $endlinkpos);
+       // echo 'link text: ' . $linktext;
+       
+       // get the obfuscated question number
+       $number = substr($data, $endlinkpos + 1, $endpos - $endlinkpos);
+       // echo 'q: ' . $number;
+
+       $question = $renderer->get_question($number, $linktext); 
+       
        $newstring = substr_replace($newstring, $question, $initpos, $endpos - $initpos + 1);
        $initpos = $endpos + 1;
     }

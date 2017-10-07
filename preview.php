@@ -29,6 +29,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+// A number of options have been eliminated that students do not need
 
 require_once(__DIR__ . '/../../config.php');
 require_once($CFG->libdir . '/questionlib.php');
@@ -45,6 +46,9 @@ define('QUESTION_PREVIEW_MAX_VARIANTS', 100);
 $id = required_param('id', PARAM_INT);
 
 // decode code goes here - see moodle_atto_question for details
+// Note this doesn't prevent students trying lots of different numbers
+// in the url but hopefully makes it more tiresome for them
+
 $id = intdiv($id-199, 7);
 
 $question = question_bank::load_question($id);
@@ -68,7 +72,10 @@ if ($cmid = optional_param('cmid', 0, PARAM_INT)) {
     $PAGE->set_context($context);
     // Note that in the other cases, require_login will set the correct page context.
 }
-question_require_capability_on($question, 'use');
+
+// Disable for this version of preview.php
+// question_require_capability_on($question, 'use');
+
 $PAGE->set_pagelayout('popup');
 
 // Get and validate display options.
@@ -127,6 +134,7 @@ if ($previewid) {
 $options->behaviour = $quba->get_preferred_behaviour();
 $options->maxmark = $quba->get_question_max_mark($slot);
 
+/*
 // Create the settings form, and initialise the fields.
 $optionsform = new preview_options_form(question_preview_form_url($question->id, $context, $previewid),
         array('quba' => $quba, 'maxvariant' => $maxvariant));
@@ -143,10 +151,10 @@ if ($newoptions = $optionsform->get_submitted_data()) {
         restart_preview($previewid, $question->id, $newoptions, $context);
     }
 }
-
+*/
 // Prepare a URL that is used in various places.
 $actionurl = question_preview_action_url($question->id, $quba->get_id(), $options, $context);
-
+/*
 // Process any actions from the buttons at the bottom of the form.
 if (data_submitted() && confirm_sesskey()) {
 
@@ -203,7 +211,7 @@ if (data_submitted() && confirm_sesskey()) {
                 $e->getMessage(), $debuginfo);
     }
 }
-
+*/
 if ($question->length) {
     $displaynumber = '1';
 } else {
@@ -223,7 +231,7 @@ if (is_null($quba->get_correct_response($slot))) {
 if (!$previewid) {
     $restartdisabled = array('disabled' => 'disabled');
 }
-
+/*
 // Prepare technical info to be output.
 $qa = $quba->get_question_attempt($slot);
 $technical = array();
@@ -236,7 +244,7 @@ $technical[] = get_string('technicalinfoquestionsummary', 'question', s($qa->get
 $technical[] = get_string('technicalinforightsummary',    'question', s($qa->get_right_answer_summary()));
 $technical[] = get_string('technicalinforesponsesummary', 'question', s($qa->get_response_summary()));
 $technical[] = get_string('technicalinfostate',           'question', '' . $qa->get_state());
-
+*/
 // Start output.
 $title = get_string('previewquestion', 'question', format_string($question->name));
 $headtags = question_engine::initialise_js() . $quba->render_question_head_html($slot);
@@ -270,6 +278,7 @@ echo html_writer::end_tag('div');
 echo html_writer::end_tag('form');
 
 // Output the technical info.
+/*
 print_collapsible_region_start('', 'techinfo', get_string('technicalinfo', 'question') .
         $OUTPUT->help_icon('technicalinfo', 'question'),
         'core_question_preview_techinfo_collapsed', true);
@@ -280,7 +289,7 @@ print_collapsible_region_end();
 
 // Display the settings form.
 $optionsform->display();
-
+*/
 $PAGE->requires->js_module('core_question_engine');
 $PAGE->requires->strings_for_js(array(
     'closepreview',
